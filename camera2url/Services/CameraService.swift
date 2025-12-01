@@ -16,13 +16,21 @@ protocol CameraServiceDelegate: AnyObject {
 struct CameraDevice: Identifiable, Equatable {
     let id: String
     let name: String
-    let isContinuityCamera: Bool
+    let deviceType: AVCaptureDevice.DeviceType
+    
+    var isContinuityCamera: Bool {
+        deviceType == .continuityCamera || deviceType == .external
+    }
     
     var displayName: String {
-        if isContinuityCamera {
-            return "\(name) (iPhone)"
-        }
         return name
+    }
+    
+    var iconName: String {
+        if isContinuityCamera {
+            return "iphone"
+        }
+        return "video.fill"
     }
 }
 
@@ -60,12 +68,15 @@ final class CameraService: NSObject {
     private let discoverySession: AVCaptureDevice.DiscoverySession
 
     override init() {
-        // Discover all video devices including external cameras (Continuity Camera)
+        // Discover all video devices including external cameras and Continuity Camera
+        // Note: On macOS, iPhone cameras via Continuity appear as a single device.
+        // The user can switch between iPhone lenses using the Camera menu in the app
+        // or by using the iPhone's camera controls directly.
         self.discoverySession = AVCaptureDevice.DiscoverySession(
             deviceTypes: [
                 .builtInWideAngleCamera,
-                .external,  // This includes Continuity Camera devices
-                .continuityCamera
+                .continuityCamera,
+                .external
             ],
             mediaType: .video,
             position: .unspecified
@@ -179,7 +190,7 @@ final class CameraService: NSObject {
                 currentCamera = CameraDevice(
                     id: dev.uniqueID,
                     name: dev.localizedName,
-                    isContinuityCamera: dev.deviceType == .continuityCamera || dev.deviceType == .external
+                    deviceType: dev.deviceType
                 )
             }
         }
@@ -211,7 +222,7 @@ final class CameraService: NSObject {
             CameraDevice(
                 id: device.uniqueID,
                 name: device.localizedName,
-                isContinuityCamera: device.deviceType == .continuityCamera || device.deviceType == .external
+                deviceType: device.deviceType
             )
         }
     }

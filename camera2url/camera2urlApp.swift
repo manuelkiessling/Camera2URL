@@ -20,5 +20,10 @@ struct camera2urlApp: App {
         WindowGroup {
             ContentView(viewModel: viewModel)
         }
+        
+        Window("Upload History", id: "upload-history") {
+            TimerHistoryView(history: viewModel.timerUploadHistory)
+        }
+        .defaultSize(width: 900, height: 600)
     }
 }

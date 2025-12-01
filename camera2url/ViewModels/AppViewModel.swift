@@ -32,10 +32,21 @@ final class AppViewModel: NSObject, ObservableObject {
     @Published private(set) var isCameraReady: Bool = false
     @Published private(set) var availableCameras: [CameraDevice] = []
     @Published private(set) var currentCamera: CameraDevice?
+    
+    // Timer mode state
+    @Published var timerConfig: TimerConfig = TimerConfig()
+    @Published private(set) var isTimerActive: Bool = false
+    @Published private(set) var timerCaptureCount: Int = 0
+    @Published private(set) var lastTimerPhoto: CapturedPhoto?
+    @Published private(set) var lastTimerCaptureTime: Date?
+    @Published private(set) var nextTimerCaptureTime: Date?
+    let timerUploadHistory = TimerUploadHistory()
 
     let configStore: ConfigStore
     private let cameraService: CameraService
     private let uploadService: UploadService
+    private var timerTask: Task<Void, Never>?
+    private var isTimerCapture: Bool = false
 
     var session: AVCaptureSession? {
         cameraService.session
@@ -130,6 +141,88 @@ final class AppViewModel: NSObject, ObservableObject {
         capturedPhoto = nil
         uploadStatus = .idle
     }
+    
+    // MARK: - Timer Mode
+    
+    func startTimer() {
+        guard !isTimerActive else { return }
+        guard currentConfig != nil else {
+            editConfig()
+            return
+        }
+        guard isCameraReady else {
+            Task { await prepareCameraIfNeeded() }
+            return
+        }
+        
+        isTimerActive = true
+        timerCaptureCount = 0
+        lastTimerPhoto = nil
+        lastTimerCaptureTime = nil
+        timerUploadHistory.clear()
+        
+        timerTask = Task {
+            await runTimerLoop()
+        }
+    }
+    
+    func stopTimer() {
+        isTimerActive = false
+        timerTask?.cancel()
+        timerTask = nil
+        nextTimerCaptureTime = nil
+    }
+    
+    private func runTimerLoop() async {
+        // Take first photo immediately
+        await captureTimerPhoto()
+        
+        while !Task.isCancelled && isTimerActive {
+            let interval = timerConfig.intervalInSeconds
+            nextTimerCaptureTime = Date().addingTimeInterval(interval)
+            
+            do {
+                try await Task.sleep(for: .seconds(interval))
+                if !Task.isCancelled && isTimerActive {
+                    await captureTimerPhoto()
+                }
+            } catch {
+                // Task was cancelled
+                break
+            }
+        }
+        
+        nextTimerCaptureTime = nil
+    }
+    
+    private func captureTimerPhoto() async {
+        guard isCameraReady else { return }
+        isTimerCapture = true
+        cameraService.capturePhoto()
+    }
+    
+    private func handleTimerCapture(photoData: Data, image: NSImage) {
+        lastTimerPhoto = CapturedPhoto(image: image, data: photoData)
+        lastTimerCaptureTime = Date()
+        timerCaptureCount += 1
+        
+        let captureNumber = timerCaptureCount
+        
+        // Upload in background and track result
+        guard let config = currentConfig else { return }
+        Task {
+            do {
+                let exchange = try await uploadService.upload(photoData: photoData, using: config)
+                timerUploadHistory.addSuccess(captureNumber: captureNumber, exchange: exchange)
+            } catch {
+                if let report = error as? UploadErrorReport {
+                    timerUploadHistory.addFailure(captureNumber: captureNumber, error: report)
+                } else {
+                    timerUploadHistory.addFailure(captureNumber: captureNumber, message: error.localizedDescription)
+                }
+            }
+        }
+    }
 
     private func upload(photoData: Data, image: NSImage) {
         guard let config = currentConfig else { return }
@@ -158,25 +251,37 @@ final class AppViewModel: NSObject, ObservableObject {
 extension AppViewModel: CameraServiceDelegate {
     func cameraService(_ service: CameraService, didCapturePhoto data: Data) {
         guard let image = NSImage(data: data) else {
-            let report = UploadErrorReport(
-                message: "Failed to read captured image.",
-                requestSummary: "No request sent.",
-                responseSummary: "Camera produced unreadable data."
-            )
-            uploadStatus = .failure(report)
+            if !isTimerCapture {
+                let report = UploadErrorReport(
+                    message: "Failed to read captured image.",
+                    requestSummary: "No request sent.",
+                    responseSummary: "Camera produced unreadable data."
+                )
+                uploadStatus = .failure(report)
+            }
+            isTimerCapture = false
             return
         }
-        upload(photoData: data, image: image)
+        
+        if isTimerCapture {
+            isTimerCapture = false
+            handleTimerCapture(photoData: data, image: image)
+        } else {
+            upload(photoData: data, image: image)
+        }
     }
 
     func cameraService(_ service: CameraService, didEncounter error: Error) {
         cameraError = error.localizedDescription
-        let report = UploadErrorReport(
-            message: "Camera error: \(error.localizedDescription)",
-            requestSummary: "No request sent.",
-            responseSummary: nil
-        )
-        uploadStatus = .failure(report)
+        if !isTimerCapture {
+            let report = UploadErrorReport(
+                message: "Camera error: \(error.localizedDescription)",
+                requestSummary: "No request sent.",
+                responseSummary: nil
+            )
+            uploadStatus = .failure(report)
+        }
+        isTimerCapture = false
     }
     
     func cameraServiceDidUpdateAvailableCameras(_ service: CameraService) {
