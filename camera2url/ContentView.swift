@@ -55,7 +55,7 @@ struct ContentView: View {
                 }
 
             VStack(alignment: .leading, spacing: 16) {
-                HStack {
+                HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Configured target")
                             .font(.headline)
@@ -68,8 +68,18 @@ struct ContentView: View {
                         }
                     }
                     Spacer()
-                    Button("Edit target URL", action: viewModel.editConfig)
-                        .controlSize(.large)
+                    
+                    VStack(alignment: .trailing, spacing: 14) {
+                        if viewModel.hasMultipleCameras {
+                            CameraPicker(
+                                cameras: viewModel.availableCameras,
+                                currentCamera: viewModel.currentCamera,
+                                onSelect: viewModel.switchCamera
+                            )
+                        }
+                        Button("Edit target URL", action: viewModel.editConfig)
+                            .controlSize(.large)
+                    }
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
@@ -199,5 +209,42 @@ private struct CaptureResultView: View {
         default:
             EmptyView()
         }
+    }
+}
+
+/// Camera picker for switching between available cameras
+private struct CameraPicker: View {
+    let cameras: [CameraDevice]
+    let currentCamera: CameraDevice?
+    let onSelect: (CameraDevice) -> Void
+    
+    var body: some View {
+        Menu {
+            ForEach(cameras) { camera in
+                Button {
+                    onSelect(camera)
+                } label: {
+                    HStack {
+                        if camera.isContinuityCamera {
+                            Image(systemName: "iphone")
+                        } else {
+                            Image(systemName: "video.fill")
+                        }
+                        Text(camera.displayName)
+                        if camera.id == currentCamera?.id {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+            }
+        } label: {
+            Label(
+                currentCamera?.displayName ?? "Select Camera",
+                systemImage: currentCamera?.isContinuityCamera == true ? "iphone" : "video.fill"
+            )
+        }
+        .menuStyle(.borderlessButton)
+        .fixedSize()
+        .controlSize(.large)
     }
 }

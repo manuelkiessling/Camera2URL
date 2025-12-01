@@ -30,6 +30,8 @@ final class AppViewModel: NSObject, ObservableObject {
     @Published private(set) var capturedPhoto: CapturedPhoto?
     @Published private(set) var cameraError: String?
     @Published private(set) var isCameraReady: Bool = false
+    @Published private(set) var availableCameras: [CameraDevice] = []
+    @Published private(set) var currentCamera: CameraDevice?
 
     let configStore: ConfigStore
     private let cameraService: CameraService
@@ -37,6 +39,10 @@ final class AppViewModel: NSObject, ObservableObject {
 
     var session: AVCaptureSession? {
         cameraService.session
+    }
+    
+    var hasMultipleCameras: Bool {
+        availableCameras.count > 1
     }
 
     init(
@@ -79,10 +85,26 @@ final class AppViewModel: NSObject, ObservableObject {
             cameraService.start()
             cameraError = nil
             isCameraReady = true
+            updateCameraState()
         } catch {
             cameraError = error.localizedDescription
             isCameraReady = false
         }
+    }
+    
+    func switchCamera(to camera: CameraDevice) {
+        do {
+            try cameraService.switchCamera(to: camera)
+            currentCamera = cameraService.currentCamera
+            cameraError = nil
+        } catch {
+            cameraError = error.localizedDescription
+        }
+    }
+    
+    private func updateCameraState() {
+        availableCameras = cameraService.availableCameras
+        currentCamera = cameraService.currentCamera
     }
 
     func stopCamera() {
@@ -155,6 +177,10 @@ extension AppViewModel: CameraServiceDelegate {
             responseSummary: nil
         )
         uploadStatus = .failure(report)
+    }
+    
+    func cameraServiceDidUpdateAvailableCameras(_ service: CameraService) {
+        updateCameraState()
     }
 }
 
