@@ -114,6 +114,10 @@ private struct MultipartBodyBuilder {
     private var components: [Data] = []
     private var summaryParts: [String] = []
 
+    init(boundary: String) {
+        self.boundary = boundary
+    }
+
     mutating func addText(name: String, value: String) {
         var part = Data()
         part.appendString("--\(boundary)\r\n")

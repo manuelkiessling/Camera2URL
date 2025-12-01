@@ -31,7 +31,7 @@ struct ConfigDialogView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 20) {
             Text("Configure request")
                 .font(.title2)
                 .bold()
@@ -45,6 +45,7 @@ struct ConfigDialogView: View {
                             .tag(Optional(config.id))
                     }
                 }
+                .controlSize(.large)
                 .onChange(of: selectedExistingId, perform: handleExistingSelection)
             }
 
@@ -54,12 +55,15 @@ struct ConfigDialogView: View {
                         .tag(verb)
                 }
             }
+            .controlSize(.large)
 
             TextField("https://example.com/endpoint", text: $url)
                 .textFieldStyle(.roundedBorder)
+                .controlSize(.large)
 
             TextField("Optional note", text: $note)
                 .textFieldStyle(.roundedBorder)
+                .controlSize(.large)
 
             if let validationMessage {
                 Text(validationMessage)
@@ -69,15 +73,23 @@ struct ConfigDialogView: View {
 
             HStack {
                 Spacer()
-                Button("Next") {
+                Button {
                     handleNext()
+                } label: {
+                    Text("Next")
+                        .font(.title3.weight(.medium))
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 4)
                 }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
                 .keyboardShortcut(.defaultAction)
                 .disabled(!canSubmit)
             }
+            .padding(.top, 4)
         }
-        .padding(24)
-        .frame(width: 420)
+        .padding(28)
+        .frame(width: 460)
     }
 
     private var canSubmit: Bool {

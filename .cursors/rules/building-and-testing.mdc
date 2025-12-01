@@ -1,0 +1,44 @@
+---
+alwaysApply: true
+---
+
+# Building and Testing Verification
+
+After making code changes to this Xcode project, always verify your work by building and running tests.
+
+## Build Verification
+
+After modifying Swift files, run from the project root:
+
+```bash
+xcodebuild -scheme camera2url -configuration Debug build 2>&1 | grep -E "(BUILD|error:|warning:)"
+```
+
+The build must succeed (`BUILD SUCCEEDED`) before considering the task complete.
+
+## Unit Test Verification
+
+After making functional changes, run unit tests:
+
+```bash
+xcodebuild -scheme camera2url -configuration Debug test -only-testing:camera2urlTests 2>&1 | grep -E "(Test case|passed|failed|BUILD)"
+```
+
+Unit tests should pass. Note: Some test flakiness may occur due to shared mock state - if a single test fails intermittently, re-run to confirm.
+
+## UI Test Verification
+
+After making UI changes, run UI tests:
+
+```bash
+xcodebuild -scheme camera2url -configuration Debug test -only-testing:camera2urlUITests 2>&1 | grep -E "(Test case|passed|failed|BUILD)"
+```
+
+UI tests launch the app and interact with it. They take longer but verify the full user experience.
+
+## When to Verify
+
+- **Always build** after modifying any `.swift` file
+- **Run unit tests** after modifying Services, Models, Stores, or ViewModels
+- **Run UI tests** after modifying Views, ContentView, or any UI-related code
+- **Clean build** (`xcodebuild clean build`) if encountering unexpected errors after file moves or renames

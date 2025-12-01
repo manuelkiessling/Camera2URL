@@ -54,9 +54,9 @@ struct ContentView: View {
                     }
                 }
 
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 4) {
                         Text("Configured target")
                             .font(.headline)
                         if let config = viewModel.currentConfig {
@@ -69,6 +69,7 @@ struct ContentView: View {
                     }
                     Spacer()
                     Button("Edit target URL", action: viewModel.editConfig)
+                        .controlSize(.large)
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
@@ -89,18 +90,19 @@ struct ContentView: View {
                 }
                 .font(.callout)
 
-                HStack {
-                    Button {
-                        viewModel.takeAndSendPhoto()
-                    } label: {
-                        Label("Take and send photo", systemImage: "camera.on.rectangle")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(!viewModel.isCameraReady || viewModel.uploadStatus == .capturing || viewModel.uploadStatus == .uploading)
+                Button {
+                    viewModel.takeAndSendPhoto()
+                } label: {
+                    Label("Take and send photo", systemImage: "camera.on.rectangle")
+                        .font(.title.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
                 }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .disabled(!viewModel.isCameraReady || viewModel.uploadStatus == .capturing || viewModel.uploadStatus == .uploading)
             }
-            .padding()
+            .padding(20)
             .frame(maxWidth: .infinity)
             .background(.ultraThinMaterial)
         }
@@ -114,7 +116,7 @@ private struct CaptureResultView: View {
     let onEdit: () -> Void
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 20) {
             Image(nsImage: photo.image)
                 .resizable()
                 .scaledToFit()
@@ -123,14 +125,24 @@ private struct CaptureResultView: View {
 
             statusView
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
+                .padding(.horizontal, 20)
 
-            HStack {
-                Button("Take next photo", action: onNext)
-                    .buttonStyle(.borderedProminent)
+            HStack(spacing: 16) {
+                Button {
+                    onNext()
+                } label: {
+                    Label("Take next photo", systemImage: "camera.fill")
+                        .font(.title3.weight(.semibold))
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 8)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+
                 Button("Edit target URL", action: onEdit)
+                    .controlSize(.large)
             }
-            .padding(.bottom)
+            .padding(.bottom, 20)
         }
         .background(Color.black.opacity(0.05))
     }

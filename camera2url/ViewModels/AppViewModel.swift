@@ -5,6 +5,7 @@
 
 import AppKit
 import AVFoundation
+import Combine
 import SwiftUI
 
 @MainActor
@@ -40,20 +41,24 @@ final class AppViewModel: NSObject, ObservableObject {
 
     init(
         configStore: ConfigStore,
-        cameraService: CameraService = CameraService(),
-        uploadService: UploadService = UploadService()
+        cameraService: CameraService? = nil,
+        uploadService: UploadService? = nil
     ) {
+        let camera = cameraService ?? CameraService()
+        let upload = uploadService ?? UploadService()
         self.configStore = configStore
-        self.cameraService = cameraService
-        self.uploadService = uploadService
+        self.cameraService = camera
+        self.uploadService = upload
         showingConfigDialog = true
         currentConfig = configStore.configs.first
         super.init()
         self.cameraService.delegate = self
     }
 
-    deinit {
-        cameraService.stop()
+    nonisolated func cleanUp() {
+        Task { @MainActor in
+            cameraService.stop()
+        }
     }
 
     func handleConfigSubmitted(_ config: RequestConfig) {
