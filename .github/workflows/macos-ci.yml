@@ -1,4 +1,4 @@
-name: CI
+name: macOS CI
 
 on:
   push:
@@ -7,8 +7,11 @@ on:
     branches: [main]
 
 jobs:
-  build-and-test:
+  macos-build-and-test:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: macos
 
     steps:
       - name: Checkout
@@ -23,3 +26,4 @@ jobs:
         env:
           XCODE_FLAGS: "CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="
         run: make test CONFIG=Debug DEST="platform=macOS,arch=arm64"
+
