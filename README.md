@@ -33,7 +33,7 @@ A macOS desktop app that captures photos from your Mac's camera and uploads them
 
 ## Requirements
 
-- macOS 15.7+
+- macOS 15.5+
 - Xcode 26.1+ (with Swift 6) for building
 
 ## Building and Testing
