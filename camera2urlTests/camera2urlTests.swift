@@ -109,6 +109,33 @@ struct Camera2urlTests {
         }
     }
 
+    @Test("UploadHistory maintains success/failure counts within rolling window")
+    func uploadHistoryCountsRespectWindow() throws {
+        let history = UploadHistory()
+        let exchange = UploadExchange(
+            statusCode: 200,
+            requestSummary: "POST https://example.com/success",
+            responseSummary: "HTTP 200"
+        )
+        for capture in 0..<120 {
+            if capture.isMultiple(of: 2) {
+                history.addSuccess(captureNumber: capture + 1, exchange: exchange, isTimerCapture: capture.isMultiple(of: 4))
+            } else {
+                let error = UploadErrorReport(
+                    message: "boom \(capture)",
+                    requestSummary: "POST https://example.com/fail",
+                    responseSummary: "HTTP 500"
+                )
+                history.addFailure(captureNumber: capture + 1, error: error, isTimerCapture: capture.isMultiple(of: 3))
+            }
+        }
+
+        #expect(history.records.count == UploadHistory.maxRecords)
+        let expectedSuccess = history.records.filter(\.success).count
+        #expect(history.successCount == expectedSuccess)
+        #expect(history.failureCount == history.records.count - expectedSuccess)
+    }
+
     // MARK: - Helpers
 
     private func makeInterceptedSession() -> URLSession {

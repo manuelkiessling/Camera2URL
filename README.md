@@ -39,19 +39,19 @@ A macOS desktop app that captures photos from your Mac's camera and uploads them
 ### Build via Command Line
 
 ```bash
-xcodebuild -scheme camera2url -configuration Debug build
+make build
 ```
 
 ### Run Unit Tests
 
 ```bash
-xcodebuild -scheme camera2url -configuration Debug test -destination 'platform=macOS,arch=arm64'
+make test
 ```
 
 ### Run UI Tests
 
 ```bash
-xcodebuild -scheme camera2urlUITests -configuration Debug test -destination 'platform=macOS,arch=arm64'
+make ui-test
 ```
 
 UI tests launch the app in a separate automation runner and require camera permission to be granted in an interactive desktop session.
@@ -59,7 +59,7 @@ UI tests launch the app in a separate automation runner and require camera permi
 ### Run All Tests
 
 ```bash
-xcodebuild -scheme camera2url -configuration Debug test -destination 'platform=macOS,arch=arm64'
+make quality
 ```
 
 ### Build via Xcode

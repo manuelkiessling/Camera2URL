@@ -68,7 +68,6 @@ class UploadHistory: ObservableObject {
             isTimerCapture: isTimerCapture
         )
         addRecord(record)
-        successCount += 1
     }
     
     func addFailure(captureNumber: Int, error: UploadErrorReport, isTimerCapture: Bool) {
@@ -83,7 +82,6 @@ class UploadHistory: ObservableObject {
             isTimerCapture: isTimerCapture
         )
         addRecord(record)
-        failureCount += 1
     }
     
     func addFailure(captureNumber: Int, message: String, isTimerCapture: Bool) {
@@ -98,7 +96,6 @@ class UploadHistory: ObservableObject {
             isTimerCapture: isTimerCapture
         )
         addRecord(record)
-        failureCount += 1
     }
     
     private func addRecord(_ record: UploadRecord) {
@@ -106,12 +103,22 @@ class UploadHistory: ObservableObject {
         if records.count > Self.maxRecords {
             records.removeLast()
         }
+        recomputeCounts()
     }
     
     func clear() {
         records.removeAll()
         successCount = 0
         failureCount = 0
+    }
+
+    private func recomputeCounts() {
+        successCount = records.reduce(into: 0) { partial, record in
+            if record.success {
+                partial += 1
+            }
+        }
+        failureCount = records.count - successCount
     }
 }
 

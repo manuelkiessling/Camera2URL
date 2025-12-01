@@ -11,7 +11,7 @@ After making code changes to this Xcode project, always verify your work by buil
 After modifying Swift files, run from the project root:
 
 ```bash
-xcodebuild -scheme camera2url -configuration Debug build -destination 'platform=macOS,arch=arm64'
+make build
 ```
 
 The build must succeed (`BUILD SUCCEEDED`) before considering the task complete.
@@ -21,7 +21,7 @@ The build must succeed (`BUILD SUCCEEDED`) before considering the task complete.
 After making functional changes, run unit tests:
 
 ```bash
-xcodebuild -scheme camera2url -configuration Debug test -destination 'platform=macOS,arch=arm64'
+make test
 ```
 
 Unit tests should pass. Note: Some test flakiness may occur due to shared mock state - if a single test fails intermittently, re-run to confirm.
@@ -31,14 +31,14 @@ Unit tests should pass. Note: Some test flakiness may occur due to shared mock s
 After making UI changes, run UI tests:
 
 ```bash
-xcodebuild -scheme camera2urlUITests -configuration Debug test -destination 'platform=macOS,arch=arm64'
+make ui-test
 ```
 
 UI tests launch the app through the automation runner. They require an interactive macOS session and camera permission.
 
 ## When to Verify
 
-- **Always build** after modifying any `.swift` file
-- **Run unit tests** after modifying Services, Models, Stores, or ViewModels
-- **Run UI tests** after modifying Views, ContentView, or any UI-related code
+- **Always run `make build`** after modifying any `.swift` file
+- **Run `make test`** after modifying Services, Models, Stores, or ViewModels
+- **Run `make ui-test`** after modifying Views, ContentView, or any UI-related code
 - **Clean build** (`xcodebuild clean build`) if encountering unexpected errors after file moves or renames
