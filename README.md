@@ -1,20 +1,38 @@
-# camera2url
+# Camera2URL
 
-A macOS desktop app that captures photos from your Mac's camera and uploads them to a configurable HTTP endpoint.
+A macOS desktop app that captures photos from your Mac's camera and uploads them to a configurable HTTP endpoint. Perfect for automated photo capture workflows, time-lapse photography with remote storage, and webhook-based photo integrations.
 
 ## Features
 
+### Photo Capture & Upload
 - Configure HTTP verb (GET, POST, PUT, PATCH, DELETE), URL, and optional note
 - Reuse previously configured endpoints from a dropdown
-- Live camera preview
+- Live camera preview with real-time feed
 - One-click photo capture and upload
-- Detailed success/failure reporting with full HTTP request/response details
-- Persistent configuration storage
+- Photos uploaded as multipart/form-data file attachments
+
+### Camera Support
+- Built-in Mac camera support
+- **Continuity Camera** - use your iPhone as a wireless camera
+- Switch between multiple cameras when available
+- Automatic camera detection when devices connect/disconnect
+
+### Timer Mode
+- Automated photo capture at configurable intervals
+- Supports seconds, minutes, hours, or days
+- Live thumbnail preview of latest captured photo
+- Upload status tracking with success/failure counts
+- Upload history window showing last 100 attempts with full request/response details
+
+### Error Handling
+- Detailed success/failure reporting
+- Full HTTP request and response details for debugging
+- Persistent configuration storage across app launches
 
 ## Requirements
 
 - macOS 15.7+
-- Xcode 26.1+ (with Swift 6)
+- Xcode 26.1+ (with Swift 6) for building
 
 ## Building and Testing
 
@@ -56,25 +74,31 @@ xcodebuild -scheme camera2url -configuration Debug test
 ```
 camera2url/
 ├── Models/
-│   ├── RequestConfig.swift      # HTTP verb, URL, note configuration
-│   └── UploadModels.swift       # Upload result types
+│   ├── RequestConfig.swift       # HTTP verb, URL, note configuration
+│   ├── UploadModels.swift        # Upload result types
+│   ├── TimerConfig.swift         # Timer interval configuration
+│   └── TimerUploadRecord.swift   # Timer upload history tracking
 ├── Services/
-│   ├── CameraService.swift      # AVFoundation camera handling
-│   └── UploadService.swift      # HTTP multipart upload
+│   ├── CameraService.swift       # AVFoundation camera handling
+│   └── UploadService.swift       # HTTP multipart upload
 ├── Stores/
-│   └── ConfigStore.swift        # UserDefaults persistence
+│   └── ConfigStore.swift         # UserDefaults persistence
 ├── ViewModels/
-│   └── AppViewModel.swift       # Main app state coordination
+│   └── AppViewModel.swift        # Main app state coordination
 ├── Views/
-│   ├── CameraPreviewView.swift  # NSViewRepresentable camera preview
-│   └── ConfigDialogView.swift   # Configuration dialog
-├── ContentView.swift            # Main app view
-└── camera2urlApp.swift          # App entry point
+│   ├── CameraPreviewView.swift   # NSViewRepresentable camera preview
+│   └── ConfigDialogView.swift    # Configuration dialog
+├── ContentView.swift             # Main app view
+└── camera2urlApp.swift           # App entry point
 ```
 
 ## Permissions
 
-The app requires:
-- **Camera access** - to capture photos
-- **Network access** - to upload photos to configured endpoints
+The app requires the following permissions (configured in entitlements):
 
+- **Camera access** (`com.apple.security.device.camera`) - to capture photos
+- **Network access** (`com.apple.security.network.client`) - to upload photos to configured endpoints
+
+## License
+
+Copyright © 2025 Manuel Kießling. All rights reserved.
