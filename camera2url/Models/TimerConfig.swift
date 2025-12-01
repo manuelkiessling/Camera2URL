@@ -59,4 +59,3 @@ struct TimerConfig: Equatable, Codable {
         return "every \(value) \(unit.rawValue)"
     }
 }
-

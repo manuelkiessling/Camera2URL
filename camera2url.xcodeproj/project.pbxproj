@@ -24,7 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		643084E82EDDE03C0001B77D /* camera2url.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = camera2url.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		643084E82EDDE03C0001B77D /* camera2url.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = camera2url.app; path = Camera2URL.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		643084F52EDDE03E0001B77D /* camera2urlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = camera2urlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		643084FF2EDDE03E0001B77D /* camera2urlUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = camera2urlUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -404,7 +404,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Camera2URL";
+				INFOPLIST_KEY_CFBundleDisplayName = Camera2URL;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is required to capture and upload photos.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Manuel Kießling. All rights reserved.";

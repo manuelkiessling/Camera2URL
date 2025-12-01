@@ -41,7 +41,7 @@ final class AppViewModel: NSObject, ObservableObject {
     @Published private(set) var lastTimerCaptureTime: Date?
     @Published private(set) var nextTimerCaptureTime: Date?
     @Published private(set) var manualCaptureCount: Int = 0
-    let uploadHistory = TimerUploadHistory()
+    let uploadHistory = UploadHistory()
 
     let configStore: ConfigStore
     private let cameraService: CameraService

@@ -336,7 +336,7 @@ private struct TimerStatusView: View {
     let config: TimerConfig
     let captureCount: Int
     let nextCaptureTime: Date?
-    @ObservedObject var uploadHistory: TimerUploadHistory
+    @ObservedObject var uploadHistory: UploadHistory
     let onStop: () -> Void
     let onShowHistory: () -> Void
     
@@ -489,9 +489,9 @@ private struct TimerControlsView: View {
 // MARK: - Timer History View
 
 /// Shows the history of timer upload attempts
-struct TimerHistoryView: View {
-    @ObservedObject var history: TimerUploadHistory
-    @State private var selectedRecord: TimerUploadRecord?
+struct UploadHistoryView: View {
+    @ObservedObject var history: UploadHistory
+    @State private var selectedRecord: UploadRecord?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -525,14 +525,14 @@ struct TimerHistoryView: View {
                 HSplitView {
                     // Records list
                     List(history.records, selection: $selectedRecord) { record in
-                        TimerHistoryRow(record: record)
+                        UploadHistoryRow(record: record)
                             .tag(record)
                     }
                     .frame(minWidth: 300)
                     
                     // Detail view
                     if let record = selectedRecord {
-                        TimerHistoryDetailView(record: record)
+                        UploadHistoryDetailView(record: record)
                             .frame(minWidth: 400)
                     } else {
                         ContentUnavailableView(
@@ -549,8 +549,8 @@ struct TimerHistoryView: View {
     }
 }
 
-private struct TimerHistoryRow: View {
-    let record: TimerUploadRecord
+private struct UploadHistoryRow: View {
+    let record: UploadRecord
     
     var body: some View {
         HStack(spacing: 12) {
@@ -593,8 +593,8 @@ private struct TimerHistoryRow: View {
     }
 }
 
-private struct TimerHistoryDetailView: View {
-    let record: TimerUploadRecord
+private struct UploadHistoryDetailView: View {
+    let record: UploadRecord
     
     var body: some View {
         ScrollView {

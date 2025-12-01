@@ -1,5 +1,5 @@
 //
-//  TimerUploadRecord.swift
+//  UploadRecord.swift
 //  camera2url
 //
 
@@ -7,14 +7,14 @@ import Combine
 import Foundation
 
 /// Record of a single upload attempt
-struct TimerUploadRecord: Identifiable, Hashable {
+struct UploadRecord: Identifiable, Hashable {
     let id = UUID()
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
     
-    static func == (lhs: TimerUploadRecord, rhs: TimerUploadRecord) -> Bool {
+    static func == (lhs: UploadRecord, rhs: UploadRecord) -> Bool {
         lhs.id == rhs.id
     }
     
@@ -41,14 +41,14 @@ struct TimerUploadRecord: Identifiable, Hashable {
 }
 
 /// Manages a rolling history of upload records
-class TimerUploadHistory: ObservableObject {
+class UploadHistory: ObservableObject {
     static let maxRecords = 100
     
-    @Published private(set) var records: [TimerUploadRecord] = []
+    @Published private(set) var records: [UploadRecord] = []
     @Published private(set) var successCount: Int = 0
     @Published private(set) var failureCount: Int = 0
     
-    var lastRecord: TimerUploadRecord? {
+    var lastRecord: UploadRecord? {
         records.first
     }
     
@@ -57,7 +57,7 @@ class TimerUploadHistory: ObservableObject {
     }
     
     func addSuccess(captureNumber: Int, exchange: UploadExchange, isTimerCapture: Bool) {
-        let record = TimerUploadRecord(
+        let record = UploadRecord(
             captureNumber: captureNumber,
             timestamp: Date(),
             success: true,
@@ -72,7 +72,7 @@ class TimerUploadHistory: ObservableObject {
     }
     
     func addFailure(captureNumber: Int, error: UploadErrorReport, isTimerCapture: Bool) {
-        let record = TimerUploadRecord(
+        let record = UploadRecord(
             captureNumber: captureNumber,
             timestamp: Date(),
             success: false,
@@ -87,7 +87,7 @@ class TimerUploadHistory: ObservableObject {
     }
     
     func addFailure(captureNumber: Int, message: String, isTimerCapture: Bool) {
-        let record = TimerUploadRecord(
+        let record = UploadRecord(
             captureNumber: captureNumber,
             timestamp: Date(),
             success: false,
@@ -101,7 +101,7 @@ class TimerUploadHistory: ObservableObject {
         failureCount += 1
     }
     
-    private func addRecord(_ record: TimerUploadRecord) {
+    private func addRecord(_ record: UploadRecord) {
         records.insert(record, at: 0)
         if records.count > Self.maxRecords {
             records.removeLast()
@@ -114,3 +114,4 @@ class TimerUploadHistory: ObservableObject {
         failureCount = 0
     }
 }
+

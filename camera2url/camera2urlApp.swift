@@ -22,7 +22,7 @@ struct camera2urlApp: App {
         }
         
         Window("Upload History", id: "upload-history") {
-            TimerHistoryView(history: viewModel.uploadHistory)
+            UploadHistoryView(history: viewModel.uploadHistory)
         }
         .defaultSize(width: 900, height: 600)
     }
