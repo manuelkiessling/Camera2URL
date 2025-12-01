@@ -28,12 +28,6 @@ make test
 
 Refer to `ios/README.md` for simulator setup, UI tests, and quality targets.
 
-## Continuous Integration
-
-- `macos-ci.yml` runs `make build` and `make test` for the macOS app on GitHub Actions.
-- `ios-ci.yml` builds the iOS target and its tests on GitHub Actions.
-
 ## License
 
 See `LICENSE.txt` for licensing details.
-
