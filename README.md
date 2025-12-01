@@ -1,4 +1,4 @@
-# Camera2URL
+# Camera2URL [![CI](https://github.com/manuelkiessling/camera2url/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/manuelkiessling/camera2url/actions/workflows/ci.yml)
 
 ![Camera2URL hero screenshot](https://github.com/manuelkiessling/gh-assets/blob/main/Camera2URL-demo-screenshot.jpg?raw=true)
 
@@ -63,6 +63,10 @@ UI tests launch the app in a separate automation runner and require camera permi
 ```bash
 make quality
 ```
+
+### Continuous Integration
+
+Pushes and pull requests against `main` automatically run `make build` and `make test` on GitHub Actions (macOS runners) via `.github/workflows/ci.yml`.
 
 ### Build via Xcode
 
