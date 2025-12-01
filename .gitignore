@@ -1,2 +1,11 @@
 .DS_Store
 .idea/
+
+# Xcode derived data and user state
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# Build artifacts
+macos/build/
+ios/build/
