@@ -1,5 +1,7 @@
 # Camera2URL
 
+![Camera2URL hero screenshot](https://github.com/manuelkiessling/gh-assets/blob/main/Camera2URL-demo-screenshot.jpg?raw=true)
+
 A macOS desktop app that captures photos from your Mac's camera and uploads them to a configurable HTTP endpoint. Perfect for automated photo capture workflows, time-lapse photography with remote storage, and webhook-based photo integrations.
 
 ## Features
