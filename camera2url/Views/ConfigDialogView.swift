@@ -46,7 +46,9 @@ struct ConfigDialogView: View {
                     }
                 }
                 .controlSize(.large)
-                .onChange(of: selectedExistingId, perform: handleExistingSelection)
+                .onChange(of: selectedExistingId) { _, newValue in
+                    handleExistingSelection(newValue)
+                }
             }
 
             Picker("HTTP Verb", selection: $selectedVerb) {
