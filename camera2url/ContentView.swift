@@ -89,8 +89,20 @@ struct ContentView: View {
                                 onSelect: viewModel.switchCamera
                             )
                         }
-                        Button("Edit target URL", action: viewModel.editConfig)
-                            .controlSize(.large)
+                        
+                        HStack(spacing: 12) {
+                            if viewModel.uploadHistory.records.count > 0 {
+                                Button {
+                                    openWindow(id: "upload-history")
+                                } label: {
+                                    Label("History", systemImage: "clock.arrow.circlepath")
+                                }
+                                .controlSize(.large)
+                            }
+                            
+                            Button("Edit target URL", action: viewModel.editConfig)
+                                .controlSize(.large)
+                        }
                     }
                 }
 
@@ -121,7 +133,7 @@ struct ContentView: View {
                         config: viewModel.timerConfig,
                         captureCount: viewModel.timerCaptureCount,
                         nextCaptureTime: viewModel.nextTimerCaptureTime,
-                        uploadHistory: viewModel.timerUploadHistory,
+                        uploadHistory: viewModel.uploadHistory,
                         onStop: viewModel.stopTimer,
                         onShowHistory: { openWindow(id: "upload-history") }
                     )
@@ -547,8 +559,17 @@ private struct TimerHistoryRow: View {
                 .font(.title3)
             
             VStack(alignment: .leading, spacing: 2) {
-                Text("Photo #\(record.captureNumber)")
-                    .font(.headline)
+                HStack(spacing: 6) {
+                    Text("Photo #\(record.captureNumber)")
+                        .font(.headline)
+                    
+                    Text(record.captureTypeLabel)
+                        .font(.caption2)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(record.isTimerCapture ? Color.blue.opacity(0.2) : Color.orange.opacity(0.2))
+                        .clipShape(Capsule())
+                }
                 
                 if record.success {
                     Text("Status \(record.statusCode ?? 0)")

@@ -40,7 +40,8 @@ final class AppViewModel: NSObject, ObservableObject {
     @Published private(set) var lastTimerPhoto: CapturedPhoto?
     @Published private(set) var lastTimerCaptureTime: Date?
     @Published private(set) var nextTimerCaptureTime: Date?
-    let timerUploadHistory = TimerUploadHistory()
+    @Published private(set) var manualCaptureCount: Int = 0
+    let uploadHistory = TimerUploadHistory()
 
     let configStore: ConfigStore
     private let cameraService: CameraService
@@ -159,7 +160,6 @@ final class AppViewModel: NSObject, ObservableObject {
         timerCaptureCount = 0
         lastTimerPhoto = nil
         lastTimerCaptureTime = nil
-        timerUploadHistory.clear()
         
         timerTask = Task {
             await runTimerLoop()
@@ -213,12 +213,12 @@ final class AppViewModel: NSObject, ObservableObject {
         Task {
             do {
                 let exchange = try await uploadService.upload(photoData: photoData, using: config)
-                timerUploadHistory.addSuccess(captureNumber: captureNumber, exchange: exchange)
+                uploadHistory.addSuccess(captureNumber: captureNumber, exchange: exchange, isTimerCapture: true)
             } catch {
                 if let report = error as? UploadErrorReport {
-                    timerUploadHistory.addFailure(captureNumber: captureNumber, error: report)
+                    uploadHistory.addFailure(captureNumber: captureNumber, error: report, isTimerCapture: true)
                 } else {
-                    timerUploadHistory.addFailure(captureNumber: captureNumber, message: error.localizedDescription)
+                    uploadHistory.addFailure(captureNumber: captureNumber, message: error.localizedDescription, isTimerCapture: true)
                 }
             }
         }
@@ -228,13 +228,18 @@ final class AppViewModel: NSObject, ObservableObject {
         guard let config = currentConfig else { return }
         capturedPhoto = CapturedPhoto(image: image, data: photoData)
         uploadStatus = .uploading
+        manualCaptureCount += 1
+        let captureNumber = manualCaptureCount
+        
         Task {
             do {
                 let exchange = try await uploadService.upload(photoData: photoData, using: config)
                 uploadStatus = .success(exchange)
+                uploadHistory.addSuccess(captureNumber: captureNumber, exchange: exchange, isTimerCapture: false)
             } catch {
                 if let report = error as? UploadErrorReport {
                     uploadStatus = .failure(report)
+                    uploadHistory.addFailure(captureNumber: captureNumber, error: report, isTimerCapture: false)
                 } else {
                     let report = UploadErrorReport(
                         message: error.localizedDescription,
@@ -242,6 +247,7 @@ final class AppViewModel: NSObject, ObservableObject {
                         responseSummary: nil
                     )
                     uploadStatus = .failure(report)
+                    uploadHistory.addFailure(captureNumber: captureNumber, message: error.localizedDescription, isTimerCapture: false)
                 }
             }
         }

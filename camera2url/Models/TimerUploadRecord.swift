@@ -6,7 +6,7 @@
 import Combine
 import Foundation
 
-/// Record of a single upload attempt during timer mode
+/// Record of a single upload attempt
 struct TimerUploadRecord: Identifiable, Hashable {
     let id = UUID()
     
@@ -17,6 +17,7 @@ struct TimerUploadRecord: Identifiable, Hashable {
     static func == (lhs: TimerUploadRecord, rhs: TimerUploadRecord) -> Bool {
         lhs.id == rhs.id
     }
+    
     let captureNumber: Int
     let timestamp: Date
     let success: Bool
@@ -24,6 +25,7 @@ struct TimerUploadRecord: Identifiable, Hashable {
     let errorMessage: String?
     let requestSummary: String
     let responseSummary: String?
+    let isTimerCapture: Bool
     
     var displayStatus: String {
         if success {
@@ -32,9 +34,13 @@ struct TimerUploadRecord: Identifiable, Hashable {
             return "✗ Failed"
         }
     }
+    
+    var captureTypeLabel: String {
+        isTimerCapture ? "Timer" : "Manual"
+    }
 }
 
-/// Manages a rolling history of timer upload records
+/// Manages a rolling history of upload records
 class TimerUploadHistory: ObservableObject {
     static let maxRecords = 100
     
@@ -50,7 +56,7 @@ class TimerUploadHistory: ObservableObject {
         records.first?.success
     }
     
-    func addSuccess(captureNumber: Int, exchange: UploadExchange) {
+    func addSuccess(captureNumber: Int, exchange: UploadExchange, isTimerCapture: Bool) {
         let record = TimerUploadRecord(
             captureNumber: captureNumber,
             timestamp: Date(),
@@ -58,13 +64,14 @@ class TimerUploadHistory: ObservableObject {
             statusCode: exchange.statusCode,
             errorMessage: nil,
             requestSummary: exchange.requestSummary,
-            responseSummary: exchange.responseSummary
+            responseSummary: exchange.responseSummary,
+            isTimerCapture: isTimerCapture
         )
         addRecord(record)
         successCount += 1
     }
     
-    func addFailure(captureNumber: Int, error: UploadErrorReport) {
+    func addFailure(captureNumber: Int, error: UploadErrorReport, isTimerCapture: Bool) {
         let record = TimerUploadRecord(
             captureNumber: captureNumber,
             timestamp: Date(),
@@ -72,13 +79,14 @@ class TimerUploadHistory: ObservableObject {
             statusCode: nil,
             errorMessage: error.message,
             requestSummary: error.requestSummary,
-            responseSummary: error.responseSummary
+            responseSummary: error.responseSummary,
+            isTimerCapture: isTimerCapture
         )
         addRecord(record)
         failureCount += 1
     }
     
-    func addFailure(captureNumber: Int, message: String) {
+    func addFailure(captureNumber: Int, message: String, isTimerCapture: Bool) {
         let record = TimerUploadRecord(
             captureNumber: captureNumber,
             timestamp: Date(),
@@ -86,7 +94,8 @@ class TimerUploadHistory: ObservableObject {
             statusCode: nil,
             errorMessage: message,
             requestSummary: "Request may not have been sent.",
-            responseSummary: nil
+            responseSummary: nil,
+            isTimerCapture: isTimerCapture
         )
         addRecord(record)
         failureCount += 1
@@ -105,4 +114,3 @@ class TimerUploadHistory: ObservableObject {
         failureCount = 0
     }
 }
-
