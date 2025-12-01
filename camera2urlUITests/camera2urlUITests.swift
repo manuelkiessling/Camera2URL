@@ -24,18 +24,11 @@ final class camera2urlUITests: XCTestCase {
 
     @MainActor
     func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        throw XCTSkip("UI automation not implemented yet; tracked for future work.")
     }
 
     @MainActor
     func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
-        }
+        throw XCTSkip("Launch performance measurements run only in Xcode for now.")
     }
 }

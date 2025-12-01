@@ -45,21 +45,21 @@ xcodebuild -scheme camera2url -configuration Debug build
 ### Run Unit Tests
 
 ```bash
-xcodebuild -scheme camera2url -configuration Debug test -only-testing:camera2urlTests
+xcodebuild -scheme camera2url -configuration Debug test -destination 'platform=macOS,arch=arm64'
 ```
 
 ### Run UI Tests
 
 ```bash
-xcodebuild -scheme camera2url -configuration Debug test -only-testing:camera2urlUITests
+xcodebuild -scheme camera2urlUITests -configuration Debug test -destination 'platform=macOS,arch=arm64'
 ```
 
-UI tests launch the app and interact with it automatically. They require camera permission to be granted.
+UI tests launch the app in a separate automation runner and require camera permission to be granted in an interactive desktop session.
 
 ### Run All Tests
 
 ```bash
-xcodebuild -scheme camera2url -configuration Debug test
+xcodebuild -scheme camera2url -configuration Debug test -destination 'platform=macOS,arch=arm64'
 ```
 
 ### Build via Xcode

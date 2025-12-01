@@ -8,6 +8,7 @@ import Foundation
 import Testing
 @testable import camera2url
 
+@Suite("Camera2urlTests", .serialized)
 struct Camera2urlTests {
     @MainActor
     @Test("ConfigStore de-duplicates entries and persists to UserDefaults")
@@ -32,6 +33,19 @@ struct Camera2urlTests {
         #expect(restored.configs.first?.id == first.id)
 
         defaults.removePersistentDomain(forName: suiteName)
+    }
+
+    @Test("TimerConfig clamps invalid timer values to a minimum of 1 second")
+    func timerConfigClampsToMinimumInterval() throws {
+        var config = TimerConfig(value: 10, unit: .seconds)
+        config.value = 0
+        #expect(config.value == 1)
+        config.value = -5
+        #expect(config.value == 1)
+
+        config.value = 5
+        #expect(config.value == 5)
+        #expect(config.intervalInSeconds == 5)
     }
 
     @Test("UploadService builds multipart requests and reports success")

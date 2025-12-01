@@ -40,7 +40,13 @@ enum TimerUnit: String, CaseIterable, Codable, Identifiable {
 
 /// Configuration for automatic photo capture timer
 struct TimerConfig: Equatable, Codable {
-    var value: Int
+    var value: Int {
+        didSet {
+            if value < 1 {
+                value = 1
+            }
+        }
+    }
     var unit: TimerUnit
     
     init(value: Int = 30, unit: TimerUnit = .seconds) {
