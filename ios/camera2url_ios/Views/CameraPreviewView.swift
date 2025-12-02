@@ -86,7 +86,7 @@ struct CameraPreviewView: UIViewRepresentable {
                     let widthBasedHeight = availableWidth / videoAspectRatio
                     let heightBasedWidth = availableHeight * videoAspectRatio
                     
-                    let heightOffset = 200 // Needed to achieve the desired height of the preview layer
+                    let heightOffset: CGFloat = 200 // Needed to achieve the desired height of the preview layer
                     let layerSize: CGSize
                     if widthBasedHeight <= availableHeight {
                         // Video fits by width - may have space above
