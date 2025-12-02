@@ -3,8 +3,14 @@ name: macOS CI
 on:
   push:
     branches: [main]
+    paths:
+      - macos/**
+      - .github/workflows/macos-ci.yml
   pull_request:
     branches: [main]
+    paths:
+      - macos/**
+      - .github/workflows/macos-ci.yml
 
 jobs:
   macos-build-and-test:
