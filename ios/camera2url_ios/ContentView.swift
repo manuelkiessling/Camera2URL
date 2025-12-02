@@ -460,15 +460,19 @@ private struct TimerControlsView: View {
     var body: some View {
         HStack(spacing: 12) {
             // Timer configuration
-            HStack(spacing: 8) {
+            HStack(spacing: 4) {
                 Image(systemName: "timer")
                     .foregroundStyle(.secondary)
                 
-                TextField("", value: $config.value, format: .number)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 50)
-                    .keyboardType(.numberPad)
-                    .disabled(isTimerActive)
+                Picker("", selection: $config.value) {
+                    ForEach(1...59, id: \.self) { value in
+                        Text("\(value)").tag(value)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(width: 60, height: 100)
+                .clipped()
+                .disabled(isTimerActive)
                 
                 Picker("", selection: $config.unit) {
                     ForEach(TimerUnit.allCases) { unit in
