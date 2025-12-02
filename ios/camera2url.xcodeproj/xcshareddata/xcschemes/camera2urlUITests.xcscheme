@@ -10,15 +10,15 @@
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A10000002F00000000000040"
-               BuildableName = "Camera2URL.app"
-               BlueprintName = "camera2url_ios"
-               ReferencedContainer = "container:camera2url_ios.xcodeproj">
+               BlueprintIdentifier = "A10000002F00000000000046"
+               BuildableName = "camera2urlUITests.xctest"
+               BlueprintName = "camera2urlUITests"
+               ReferencedContainer = "container:camera2url.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,6 +29,19 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A10000002F00000000000046"
+               BuildableName = "camera2urlUITests.xctest"
+               BlueprintName = "camera2urlUITests"
+               ReferencedContainer = "container:camera2url.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -40,16 +53,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A10000002F00000000000040"
-            BuildableName = "Camera2URL.app"
-            BlueprintName = "camera2url_ios"
-            ReferencedContainer = "container:camera2url_ios.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -57,16 +60,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A10000002F00000000000040"
-            BuildableName = "Camera2URL.app"
-            BlueprintName = "camera2url_ios"
-            ReferencedContainer = "container:camera2url_ios.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

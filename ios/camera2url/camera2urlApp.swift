@@ -1,6 +1,6 @@
 //
-//  camera2url_iosApp.swift
-//  camera2url_ios
+//  camera2urlApp.swift
+//  camera2url
 //
 //  Created by Manuel Kießling on 01.12.25.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct camera2url_iosApp: App {
+struct camera2urlApp: App {
     @StateObject private var viewModel: AppViewModel
 
     init() {

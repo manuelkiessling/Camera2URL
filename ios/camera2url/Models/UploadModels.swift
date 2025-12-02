@@ -1,6 +1,6 @@
 //
 //  UploadModels.swift
-//  camera2url_ios
+//  camera2url
 //
 
 import Foundation

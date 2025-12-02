@@ -1,11 +1,11 @@
 //
-//  camera2url_iosUITestsLaunchTests.swift
-//  camera2url_iosUITests
+//  camera2urlUITestsLaunchTests.swift
+//  camera2urlUITests
 //
 
 import XCTest
 
-final class camera2url_iosUITestsLaunchTests: XCTestCase {
+final class camera2urlUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

@@ -65,8 +65,8 @@ make quality
 
 ### Build via Xcode
 
-1. Open `camera2url_ios.xcodeproj` in Xcode
-2. Select the `camera2url_ios` scheme
+1. Open `camera2url.xcodeproj` in Xcode
+2. Select the `camera2url` scheme
 3. Select an iOS Simulator or device
 4. Press ⌘B to build or ⌘R to run
 5. Press ⌘U to run all tests
@@ -74,7 +74,7 @@ make quality
 ## Project Structure
 
 ```
-camera2url_ios/
+camera2url/
 ├── Models/
 │   ├── RequestConfig.swift       # HTTP verb, URL, note configuration
 │   ├── UploadModels.swift        # Upload result types
@@ -92,7 +92,7 @@ camera2url_ios/
 │   ├── ConfigView.swift          # Configuration sheet
 │   └── UploadHistoryView.swift   # Upload history sheet
 ├── ContentView.swift             # Main app view
-└── camera2url_iosApp.swift       # App entry point
+└── camera2urlApp.swift       # App entry point
 ```
 
 ## Permissions

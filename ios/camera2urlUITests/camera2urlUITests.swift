@@ -1,11 +1,11 @@
 //
-//  camera2url_iosUITests.swift
-//  camera2url_iosUITests
+//  camera2urlUITests.swift
+//  camera2urlUITests
 //
 
 import XCTest
 
-final class camera2url_iosUITests: XCTestCase {
+final class camera2urlUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // In UI tests it is usually best to stop immediately when a failure occurs.

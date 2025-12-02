@@ -1,14 +1,14 @@
 //
-//  camera2url_iosTests.swift
-//  camera2url_iosTests
+//  camera2urlTests.swift
+//  camera2urlTests
 //
 
 import Foundation
 import Testing
-@testable import camera2url_ios
+@testable import camera2url
 
-@Suite("Camera2url_iosTests", .serialized)
-struct Camera2url_iosTests {
+@Suite("Camera2urlTests", .serialized)
+struct Camera2urlTests {
     @MainActor
     @Test("ConfigStore de-duplicates entries and persists to UserDefaults")
     func configStoreDeduplicatesAndPersists() throws {
