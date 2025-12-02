@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "Camera2URL-iOS-Default-1024pt@1x.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -11,4 +12,3 @@
     "version" : 1
   }
 }
-
