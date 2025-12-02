@@ -40,7 +40,8 @@ struct ContentView: View {
     }
 
     private var cameraPreviewSection: some View {
-        ZStack(alignment: .bottom) {
+        VStack(spacing: 0) {
+            // Camera preview - fills remaining space above UI controls
             CameraPreviewView(session: viewModel.session)
                 .overlay(alignment: .topTrailing) {
                     // Show latest timer photo thumbnail when timer is active
@@ -66,6 +67,7 @@ struct ContentView: View {
                     }
                 }
 
+            // UI controls - fixed size at bottom
             VStack(alignment: .leading, spacing: 16) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
