@@ -40,35 +40,39 @@ struct ContentView: View {
     }
 
     private var cameraPreviewSection: some View {
-        ZStack(alignment: .bottom) {
-            CameraPreviewView(session: viewModel.session)
-                .overlay(alignment: .topTrailing) {
-                    // Show latest timer photo thumbnail when timer is active
-                    if viewModel.isTimerActive, let photo = viewModel.lastTimerPhoto {
-                        TimerPhotoThumbnail(
-                            photo: photo,
-                            captureCount: viewModel.timerCaptureCount,
-                            captureTime: viewModel.lastTimerCaptureTime
-                        )
-                        .padding(16)
-                        .padding(.top, 48) // Account for safe area
-                    }
-                }
-                .overlay {
-                    if !viewModel.isCameraReady {
-                        VStack(spacing: 12) {
-                            ProgressView()
-                                .tint(.white)
-                            Text(viewModel.cameraError ?? "Preparing camera…")
-                                .foregroundStyle(.white)
-                                .multilineTextAlignment(.center)
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                // Camera preview - fills remaining space above UI controls
+                CameraPreviewView(session: viewModel.session, topSafeAreaInset: geometry.safeAreaInsets.top)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .overlay(alignment: .topTrailing) {
+                        // Show latest timer photo thumbnail when timer is active
+                        if viewModel.isTimerActive, let photo = viewModel.lastTimerPhoto {
+                            TimerPhotoThumbnail(
+                                photo: photo,
+                                captureCount: viewModel.timerCaptureCount,
+                                captureTime: viewModel.lastTimerCaptureTime
+                            )
+                            .padding(16)
+                            .padding(.top, geometry.safeAreaInsets.top)
                         }
-                        .padding()
-                        .background(.black.opacity(0.6))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
-                }
+                    .overlay {
+                        if !viewModel.isCameraReady {
+                            VStack(spacing: 12) {
+                                ProgressView()
+                                    .tint(.white)
+                                Text(viewModel.cameraError ?? "Preparing camera…")
+                                    .foregroundStyle(.white)
+                                    .multilineTextAlignment(.center)
+                            }
+                            .padding()
+                            .background(.black.opacity(0.6))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                    }
 
+            // UI controls - fixed size at bottom
             VStack(spacing: 16) {
                 // Target info and buttons
                 HStack(alignment: .top) {
@@ -157,9 +161,10 @@ struct ContentView: View {
                 )
             }
             .padding(20)
-            .padding(.bottom, 12)
+            .padding(.bottom, geometry.safeAreaInsets.bottom + 12)
             .frame(maxWidth: .infinity)
             .background(.ultraThinMaterial)
+            }
         }
     }
     
