@@ -3,8 +3,8 @@
 Camera2URL is a Swift app suite that allows users to capture still images from Apple device cameras
 and upload them to configurable HTTP endpoints. The repository hosts code for two platforms:
 
-- `macos/` – the macOS desktop app. See `macos/README.md` for full usage, build, and testing instructions.
-- `ios/` – the iOS counterpart for iPhone and iPad. See `ios/README.md` for details.
+- `macos/` – the macOS desktop app. See [the macOS README](macos/README.md) for full usage, build, and testing instructions.
+- `ios/` – the iOS counterpart for iPhone and iPad. See [the iOS README](ios/README.md) for details.
 
 ## Quick Start
 
