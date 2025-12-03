@@ -8,6 +8,12 @@ and upload them to configurable HTTP endpoints. The repository hosts code for tw
 - `macos/` – the macOS desktop app. See [the macOS README](macos/README.md) for full usage, build, and testing instructions.
 - `ios/` – the iOS counterpart for iPhone and iPad. See [the iOS README](ios/README.md) for details.
 
+## Demo video
+
+The below video shows how Camera2URL can be used to trigger an n8n workflow by immediately posting images to the n8n Webhook node endpoint URL: 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Y5nCw8NY8zk?si=cIYCWRTPdi9KwBoN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## Quick Start
 
 ### Build and test the macOS app
