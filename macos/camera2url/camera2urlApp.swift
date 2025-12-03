@@ -5,15 +5,20 @@
 //  Created by Manuel Kießling on 01.12.25.
 //
 
+import Camera2URLShared
 import SwiftUI
+
+/// Type alias for the macOS-specific AppViewModel
+typealias MacOSAppViewModel = AppViewModel<CameraService>
 
 @main
 struct camera2urlApp: App {
-    @StateObject private var viewModel: AppViewModel
+    @StateObject private var viewModel: MacOSAppViewModel
 
     init() {
         let store = ConfigStore()
-        _viewModel = StateObject(wrappedValue: AppViewModel(configStore: store))
+        let camera = CameraService()
+        _viewModel = StateObject(wrappedValue: MacOSAppViewModel(configStore: store, cameraService: camera))
     }
 
     var body: some Scene {

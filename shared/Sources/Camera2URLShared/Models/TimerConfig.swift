@@ -1,24 +1,24 @@
 //
 //  TimerConfig.swift
-//  camera2url
+//  Camera2URLShared
 //
 
 import Foundation
 
 /// Time unit for the timer interval
-enum TimerUnit: String, CaseIterable, Codable, Identifiable {
+public enum TimerUnit: String, CaseIterable, Codable, Identifiable, Sendable {
     case seconds = "seconds"
     case minutes = "minutes"
     case hours = "hours"
     case days = "days"
     
-    var id: String { rawValue }
+    public var id: String { rawValue }
     
-    var displayName: String {
+    public var displayName: String {
         rawValue.capitalized
     }
     
-    var singularName: String {
+    public var singularName: String {
         switch self {
         case .seconds: return "second"
         case .minutes: return "minute"
@@ -28,7 +28,7 @@ enum TimerUnit: String, CaseIterable, Codable, Identifiable {
     }
     
     /// Convert a value in this unit to seconds
-    func toSeconds(_ value: Int) -> TimeInterval {
+    public func toSeconds(_ value: Int) -> TimeInterval {
         switch self {
         case .seconds: return TimeInterval(value)
         case .minutes: return TimeInterval(value * 60)
@@ -39,26 +39,26 @@ enum TimerUnit: String, CaseIterable, Codable, Identifiable {
 }
 
 /// Configuration for automatic photo capture timer
-struct TimerConfig: Equatable, Codable {
-    var value: Int {
+public struct TimerConfig: Equatable, Codable, Sendable {
+    public var value: Int {
         didSet {
             if value < 1 {
                 value = 1
             }
         }
     }
-    var unit: TimerUnit
+    public var unit: TimerUnit
     
-    init(value: Int = 30, unit: TimerUnit = .seconds) {
+    public init(value: Int = 30, unit: TimerUnit = .seconds) {
         self.value = max(1, value)
         self.unit = unit
     }
     
-    var intervalInSeconds: TimeInterval {
+    public var intervalInSeconds: TimeInterval {
         unit.toSeconds(value)
     }
     
-    var displayString: String {
+    public var displayString: String {
         if value == 1 {
             return "every \(value) \(unit.singularName)"
         }

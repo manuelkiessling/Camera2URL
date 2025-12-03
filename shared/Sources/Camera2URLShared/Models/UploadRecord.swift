@@ -1,33 +1,53 @@
 //
 //  UploadRecord.swift
-//  camera2url
+//  Camera2URLShared
 //
 
 import Combine
 import Foundation
 
 /// Record of a single upload attempt
-struct UploadRecord: Identifiable, Hashable {
-    let id = UUID()
+public struct UploadRecord: Identifiable, Hashable, Sendable {
+    public let id = UUID()
     
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
     
-    static func == (lhs: UploadRecord, rhs: UploadRecord) -> Bool {
+    public static func == (lhs: UploadRecord, rhs: UploadRecord) -> Bool {
         lhs.id == rhs.id
     }
     
-    let captureNumber: Int
-    let timestamp: Date
-    let success: Bool
-    let statusCode: Int?
-    let errorMessage: String?
-    let requestSummary: String
-    let responseSummary: String?
-    let isTimerCapture: Bool
+    public let captureNumber: Int
+    public let timestamp: Date
+    public let success: Bool
+    public let statusCode: Int?
+    public let errorMessage: String?
+    public let requestSummary: String
+    public let responseSummary: String?
+    public let isTimerCapture: Bool
     
-    var displayStatus: String {
+    public init(
+        captureNumber: Int,
+        timestamp: Date,
+        success: Bool,
+        statusCode: Int?,
+        errorMessage: String?,
+        requestSummary: String,
+        responseSummary: String?,
+        isTimerCapture: Bool
+    ) {
+        self.captureNumber = captureNumber
+        self.timestamp = timestamp
+        self.success = success
+        self.statusCode = statusCode
+        self.errorMessage = errorMessage
+        self.requestSummary = requestSummary
+        self.responseSummary = responseSummary
+        self.isTimerCapture = isTimerCapture
+    }
+    
+    public var displayStatus: String {
         if success {
             return "✓ Success (\(statusCode ?? 0))"
         } else {
@@ -35,28 +55,31 @@ struct UploadRecord: Identifiable, Hashable {
         }
     }
     
-    var captureTypeLabel: String {
+    public var captureTypeLabel: String {
         isTimerCapture ? "Timer" : "Manual"
     }
 }
 
 /// Manages a rolling history of upload records
-class UploadHistory: ObservableObject {
-    static let maxRecords = 100
+@MainActor
+public class UploadHistory: ObservableObject {
+    public static let maxRecords = 100
     
-    @Published private(set) var records: [UploadRecord] = []
-    @Published private(set) var successCount: Int = 0
-    @Published private(set) var failureCount: Int = 0
+    @Published public private(set) var records: [UploadRecord] = []
+    @Published public private(set) var successCount: Int = 0
+    @Published public private(set) var failureCount: Int = 0
     
-    var lastRecord: UploadRecord? {
+    public init() {}
+    
+    public var lastRecord: UploadRecord? {
         records.first
     }
     
-    var lastSuccessful: Bool? {
+    public var lastSuccessful: Bool? {
         records.first?.success
     }
     
-    func addSuccess(captureNumber: Int, exchange: UploadExchange, isTimerCapture: Bool) {
+    public func addSuccess(captureNumber: Int, exchange: UploadExchange, isTimerCapture: Bool) {
         let record = UploadRecord(
             captureNumber: captureNumber,
             timestamp: Date(),
@@ -70,7 +93,7 @@ class UploadHistory: ObservableObject {
         addRecord(record)
     }
     
-    func addFailure(captureNumber: Int, error: UploadErrorReport, isTimerCapture: Bool) {
+    public func addFailure(captureNumber: Int, error: UploadErrorReport, isTimerCapture: Bool) {
         let record = UploadRecord(
             captureNumber: captureNumber,
             timestamp: Date(),
@@ -84,7 +107,7 @@ class UploadHistory: ObservableObject {
         addRecord(record)
     }
     
-    func addFailure(captureNumber: Int, message: String, isTimerCapture: Bool) {
+    public func addFailure(captureNumber: Int, message: String, isTimerCapture: Bool) {
         let record = UploadRecord(
             captureNumber: captureNumber,
             timestamp: Date(),
@@ -106,7 +129,7 @@ class UploadHistory: ObservableObject {
         recomputeCounts()
     }
     
-    func clear() {
+    public func clear() {
         records.removeAll()
         successCount = 0
         failureCount = 0

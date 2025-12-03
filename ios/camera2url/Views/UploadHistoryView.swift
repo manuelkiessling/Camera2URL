@@ -3,6 +3,7 @@
 //  camera2url
 //
 
+import Camera2URLShared
 import SwiftUI
 
 struct UploadHistoryView: View {
@@ -185,4 +186,3 @@ private struct DetailSection<Content: View>: View {
 #Preview {
     UploadHistoryView(history: UploadHistory())
 }
-

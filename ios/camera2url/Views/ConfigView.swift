@@ -3,6 +3,7 @@
 //  camera2url
 //
 
+import Camera2URLShared
 import SwiftUI
 
 struct ConfigView: View {
@@ -149,4 +150,3 @@ struct ConfigView: View {
         onComplete: { _ in }
     )
 }
-

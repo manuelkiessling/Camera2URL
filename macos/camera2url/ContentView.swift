@@ -5,10 +5,11 @@
 //  Created by Manuel Kießling on 01.12.25.
 //
 
+import Camera2URLShared
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var viewModel: AppViewModel
+    @ObservedObject var viewModel: MacOSAppViewModel
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -26,7 +27,7 @@ struct ContentView: View {
         }
         .background(Color.black)
         .ignoresSafeArea()
-        .sheet(isPresented: $viewModel.showingConfigDialog) {
+        .sheet(isPresented: $viewModel.showingConfigSheet) {
             ConfigDialogView(
                 configStore: viewModel.configStore,
                 initialConfig: viewModel.currentConfig,
@@ -170,8 +171,8 @@ struct ContentView: View {
 }
 
 private struct CaptureResultView: View {
-    let photo: AppViewModel.CapturedPhoto
-    let status: AppViewModel.UploadStatus
+    let photo: MacOSAppViewModel.CapturedPhoto
+    let status: MacOSAppViewModel.UploadStatus
     let onNext: () -> Void
     let onEdit: () -> Void
 
@@ -299,7 +300,7 @@ private struct CameraPicker: View {
 
 /// Thumbnail showing the latest photo captured by the timer
 private struct TimerPhotoThumbnail: View {
-    let photo: AppViewModel.CapturedPhoto
+    let photo: MacOSAppViewModel.CapturedPhoto
     let captureCount: Int
     let captureTime: Date?
     

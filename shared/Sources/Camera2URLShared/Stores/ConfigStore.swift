@@ -1,24 +1,24 @@
 //
 //  ConfigStore.swift
-//  camera2url
+//  Camera2URLShared
 //
 
 import Combine
 import Foundation
 
 @MainActor
-final class ConfigStore: ObservableObject {
-    @Published private(set) var configs: [RequestConfig] = []
+public final class ConfigStore: ObservableObject {
+    @Published public private(set) var configs: [RequestConfig] = []
 
     private let storageKey = "camera2url.requestConfigs"
     private let userDefaults: UserDefaults
 
-    init(userDefaults: UserDefaults = .standard) {
+    public init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
         load()
     }
 
-    func upsert(verb: HTTPVerb, url: String, note: String) -> RequestConfig {
+    public func upsert(verb: HTTPVerb, url: String, note: String) -> RequestConfig {
         let normalizedUrl = url.trimmingCharacters(in: .whitespacesAndNewlines)
         let normalizedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
         if let index = configs.firstIndex(where: { $0.matches(verb: verb, url: normalizedUrl, note: normalizedNote) }) {
@@ -34,14 +34,14 @@ final class ConfigStore: ObservableObject {
         return config
     }
 
-    func updateSelection(_ config: RequestConfig) {
+    public func updateSelection(_ config: RequestConfig) {
         guard let index = configs.firstIndex(where: { $0.id == config.id }) else { return }
         configs.remove(at: index)
         configs.insert(config, at: 0)
         persist()
     }
 
-    func deleteAll() {
+    public func deleteAll() {
         configs.removeAll()
         persist()
     }

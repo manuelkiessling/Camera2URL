@@ -6,6 +6,17 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A10000002F00000000000200 /* Camera2URLShared in Frameworks */ = {
+			isa = PBXBuildFile;
+			productRef = A10000002F00000000000201 /* Camera2URLShared */;
+		};
+		A10000002F00000000000202 /* Camera2URLShared in Frameworks */ = {
+			isa = PBXBuildFile;
+			productRef = A10000002F00000000000203 /* Camera2URLShared */;
+		};
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A10000002F00000000000100 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000002F00000000000200 /* Camera2URLShared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000002F00000000000202 /* Camera2URLShared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +125,7 @@
 			);
 			name = camera2url;
 			packageProductDependencies = (
+				A10000002F00000000000201 /* Camera2URLShared */,
 			);
 			productName = camera2url;
 			productReference = A10000002F00000000000001 /* Camera2URL.app */;
@@ -135,6 +149,7 @@
 			);
 			name = camera2urlTests;
 			packageProductDependencies = (
+				A10000002F00000000000203 /* Camera2URLShared */,
 			);
 			productName = camera2urlTests;
 			productReference = A10000002F00000000000002 /* camera2urlTests.xctest */;
@@ -195,6 +210,9 @@
 			);
 			mainGroup = A10000002F00000000000030;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A10000002F00000000000210 /* XCLocalSwiftPackageReference "Camera2URLShared" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A10000002F00000000000031 /* Products */;
 			projectDirPath = "";
@@ -595,6 +613,24 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A10000002F00000000000210 /* XCLocalSwiftPackageReference "shared" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../shared;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A10000002F00000000000201 /* Camera2URLShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Camera2URLShared;
+		};
+		A10000002F00000000000203 /* Camera2URLShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Camera2URLShared;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A10000002F00000000000050 /* Project object */;
 }

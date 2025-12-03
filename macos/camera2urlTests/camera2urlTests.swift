@@ -4,6 +4,7 @@
 //
 //
 
+import Camera2URLShared
 import Foundation
 import Testing
 @testable import camera2url
@@ -109,6 +110,7 @@ struct Camera2urlTests {
         }
     }
 
+    @MainActor
     @Test("UploadHistory maintains success/failure counts within rolling window")
     func uploadHistoryCountsRespectWindow() throws {
         let history = UploadHistory()

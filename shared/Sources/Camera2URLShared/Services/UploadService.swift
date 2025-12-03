@@ -1,18 +1,18 @@
 //
 //  UploadService.swift
-//  camera2url
+//  Camera2URLShared
 //
 
 import Foundation
 
-final class UploadService {
+public final class UploadService: Sendable {
     private let session: URLSession
 
-    init(session: URLSession = .shared) {
+    public init(session: URLSession = .shared) {
         self.session = session
     }
 
-    func upload(photoData: Data, using config: RequestConfig) async throws -> UploadExchange {
+    public func upload(photoData: Data, using config: RequestConfig) async throws -> UploadExchange {
         let boundary = "Boundary-\(UUID().uuidString)"
         let url = try makeURL(from: config.url)
         var request = URLRequest(url: url)

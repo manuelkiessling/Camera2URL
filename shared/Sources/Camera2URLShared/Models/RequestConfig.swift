@@ -1,36 +1,36 @@
 //
 //  RequestConfig.swift
-//  camera2url
+//  Camera2URLShared
 //
 
 import Foundation
 
-enum HTTPVerb: String, CaseIterable, Codable, Identifiable {
+public enum HTTPVerb: String, CaseIterable, Codable, Identifiable, Sendable {
     case get = "GET"
     case post = "POST"
     case put = "PUT"
     case patch = "PATCH"
     case delete = "DELETE"
 
-    var id: String { rawValue }
+    public var id: String { rawValue }
 
-    static var defaultVerb: HTTPVerb { .post }
+    public static var defaultVerb: HTTPVerb { .post }
 }
 
-struct RequestConfig: Identifiable, Codable, Equatable {
-    let id: UUID
-    var verb: HTTPVerb
-    var url: String
-    var note: String
+public struct RequestConfig: Identifiable, Codable, Equatable, Sendable {
+    public let id: UUID
+    public var verb: HTTPVerb
+    public var url: String
+    public var note: String
 
-    init(id: UUID = UUID(), verb: HTTPVerb, url: String, note: String) {
+    public init(id: UUID = UUID(), verb: HTTPVerb, url: String, note: String) {
         self.id = id
         self.verb = verb
         self.url = url
         self.note = note
     }
 
-    var summary: String {
+    public var summary: String {
         let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmedNote.isEmpty {
             return "\(verb.rawValue) · \(url)"
@@ -38,7 +38,7 @@ struct RequestConfig: Identifiable, Codable, Equatable {
         return "\(verb.rawValue) · \(url) · \(trimmedNote)"
     }
 
-    func matches(verb: HTTPVerb, url: String, note: String) -> Bool {
+    public func matches(verb: HTTPVerb, url: String, note: String) -> Bool {
         let normalizedUrl = url.trimmingCharacters(in: .whitespacesAndNewlines)
         let normalizedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
         return self.verb == verb

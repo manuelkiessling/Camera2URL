@@ -1,15 +1,14 @@
 //
-//  camera2urlTests.swift
-//  camera2urlTests
+//  Camera2URLSharedTests.swift
+//  Camera2URLSharedTests
 //
 
-import Camera2URLShared
 import Foundation
 import Testing
-@testable import camera2url
+@testable import Camera2URLShared
 
-@Suite("Camera2urlTests", .serialized)
-struct Camera2urlTests {
+@Suite("Camera2URLSharedTests", .serialized)
+struct Camera2URLSharedTests {
     @MainActor
     @Test("ConfigStore de-duplicates entries and persists to UserDefaults")
     func configStoreDeduplicatesAndPersists() throws {
@@ -175,3 +174,4 @@ final class MockURLProtocol: URLProtocol {
 
     override func stopLoading() {}
 }
+

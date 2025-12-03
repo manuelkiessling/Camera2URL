@@ -1,16 +1,15 @@
 //
 //  AppViewModel.swift
-//  camera2url
+//  Camera2URLShared
 //
 
-import AppKit
 import AVFoundation
 import Combine
 import SwiftUI
 
 @MainActor
-final class AppViewModel: NSObject, ObservableObject {
-    enum UploadStatus: Equatable {
+public final class AppViewModel<CameraService: CameraServiceProtocol>: NSObject, ObservableObject {
+    public enum UploadStatus: Equatable {
         case idle
         case capturing
         case uploading
@@ -18,80 +17,83 @@ final class AppViewModel: NSObject, ObservableObject {
         case failure(UploadErrorReport)
     }
 
-    struct CapturedPhoto: Identifiable {
-        let id = UUID()
-        let image: NSImage
-        let data: Data
+    public struct CapturedPhoto: Identifiable {
+        public let id = UUID()
+        public let image: PlatformImage
+        public let data: Data
+        
+        public init(image: PlatformImage, data: Data) {
+            self.image = image
+            self.data = data
+        }
     }
 
-    @Published var showingConfigDialog: Bool = true
-    @Published private(set) var currentConfig: RequestConfig?
-    @Published private(set) var uploadStatus: UploadStatus = .idle
-    @Published private(set) var capturedPhoto: CapturedPhoto?
-    @Published private(set) var cameraError: String?
-    @Published private(set) var isCameraReady: Bool = false
-    @Published private(set) var availableCameras: [CameraDevice] = []
-    @Published private(set) var currentCamera: CameraDevice?
+    @Published public var showingConfigSheet: Bool = true
+    @Published public private(set) var currentConfig: RequestConfig?
+    @Published public private(set) var uploadStatus: UploadStatus = .idle
+    @Published public private(set) var capturedPhoto: CapturedPhoto?
+    @Published public private(set) var cameraError: String?
+    @Published public private(set) var isCameraReady: Bool = false
+    @Published public private(set) var availableCameras: [CameraService.CameraDeviceType] = []
+    @Published public private(set) var currentCamera: CameraService.CameraDeviceType?
     
     // Timer mode state
-    @Published var timerConfig: TimerConfig = TimerConfig()
-    @Published private(set) var isTimerActive: Bool = false
-    @Published private(set) var timerCaptureCount: Int = 0
-    @Published private(set) var lastTimerPhoto: CapturedPhoto?
-    @Published private(set) var lastTimerCaptureTime: Date?
-    @Published private(set) var nextTimerCaptureTime: Date?
-    @Published private(set) var manualCaptureCount: Int = 0
-    let uploadHistory = UploadHistory()
+    @Published public var timerConfig: TimerConfig = TimerConfig()
+    @Published public private(set) var isTimerActive: Bool = false
+    @Published public private(set) var timerCaptureCount: Int = 0
+    @Published public private(set) var lastTimerPhoto: CapturedPhoto?
+    @Published public private(set) var lastTimerCaptureTime: Date?
+    @Published public private(set) var nextTimerCaptureTime: Date?
+    @Published public private(set) var manualCaptureCount: Int = 0
+    public let uploadHistory = UploadHistory()
 
-    let configStore: ConfigStore
+    public let configStore: ConfigStore
     private let cameraService: CameraService
     private let uploadService: UploadService
     private var timerTask: Task<Void, Never>?
     private var isTimerCapture: Bool = false
 
-    var session: AVCaptureSession? {
+    public var session: AVCaptureSession? {
         cameraService.session
     }
     
-    var hasMultipleCameras: Bool {
+    public var hasMultipleCameras: Bool {
         availableCameras.count > 1
     }
 
-    init(
+    public init(
         configStore: ConfigStore,
-        cameraService: CameraService? = nil,
-        uploadService: UploadService? = nil
+        cameraService: CameraService,
+        uploadService: UploadService = UploadService()
     ) {
-        let camera = cameraService ?? CameraService()
-        let upload = uploadService ?? UploadService()
         self.configStore = configStore
-        self.cameraService = camera
-        self.uploadService = upload
-        showingConfigDialog = true
+        self.cameraService = cameraService
+        self.uploadService = uploadService
+        showingConfigSheet = true
         currentConfig = configStore.configs.first
         super.init()
         self.cameraService.delegate = self
     }
 
-    nonisolated func cleanUp() {
+    nonisolated public func cleanUp() {
         Task { @MainActor in
             cameraService.stop()
         }
     }
 
-    func handleConfigSubmitted(_ config: RequestConfig) {
+    public func handleConfigSubmitted(_ config: RequestConfig) {
         currentConfig = config
-        showingConfigDialog = false
+        showingConfigSheet = false
         Task {
             await prepareCameraIfNeeded()
         }
     }
 
-    func editConfig() {
-        showingConfigDialog = true
+    public func editConfig() {
+        showingConfigSheet = true
     }
 
-    func prepareCameraIfNeeded() async {
+    public func prepareCameraIfNeeded() async {
         do {
             try await cameraService.prepareIfNeeded()
             cameraService.start()
@@ -104,7 +106,7 @@ final class AppViewModel: NSObject, ObservableObject {
         }
     }
     
-    func switchCamera(to camera: CameraDevice) {
+    public func switchCamera(to camera: CameraService.CameraDeviceType) {
         do {
             try cameraService.switchCamera(to: camera)
             currentCamera = cameraService.currentCamera
@@ -119,12 +121,12 @@ final class AppViewModel: NSObject, ObservableObject {
         currentCamera = cameraService.currentCamera
     }
 
-    func stopCamera() {
+    public func stopCamera() {
         cameraService.stop()
         isCameraReady = false
     }
 
-    func takeAndSendPhoto() {
+    public func takeAndSendPhoto() {
         guard currentConfig != nil else {
             editConfig()
             return
@@ -138,14 +140,14 @@ final class AppViewModel: NSObject, ObservableObject {
         cameraService.capturePhoto()
     }
 
-    func resetForNextCapture() {
+    public func resetForNextCapture() {
         capturedPhoto = nil
         uploadStatus = .idle
     }
     
     // MARK: - Timer Mode
     
-    func startTimer() {
+    public func startTimer() {
         guard !isTimerActive else { return }
         guard currentConfig != nil else {
             editConfig()
@@ -166,7 +168,7 @@ final class AppViewModel: NSObject, ObservableObject {
         }
     }
     
-    func stopTimer() {
+    public func stopTimer() {
         isTimerActive = false
         timerTask?.cancel()
         timerTask = nil
@@ -201,7 +203,7 @@ final class AppViewModel: NSObject, ObservableObject {
         cameraService.capturePhoto()
     }
     
-    private func handleTimerCapture(photoData: Data, image: NSImage) {
+    private func handleTimerCapture(photoData: Data, image: PlatformImage) {
         lastTimerPhoto = CapturedPhoto(image: image, data: photoData)
         lastTimerCaptureTime = Date()
         timerCaptureCount += 1
@@ -224,7 +226,7 @@ final class AppViewModel: NSObject, ObservableObject {
         }
     }
 
-    private func upload(photoData: Data, image: NSImage) {
+    private func upload(photoData: Data, image: PlatformImage) {
         guard let config = currentConfig else { return }
         capturedPhoto = CapturedPhoto(image: image, data: photoData)
         uploadStatus = .uploading
@@ -255,8 +257,8 @@ final class AppViewModel: NSObject, ObservableObject {
 }
 
 extension AppViewModel: CameraServiceDelegate {
-    func cameraService(_ service: CameraService, didCapturePhoto data: Data) {
-        guard let image = NSImage(data: data) else {
+    public func cameraServiceDidCapturePhoto(_ data: Data) {
+        guard let image = PlatformImage(data: data) else {
             if !isTimerCapture {
                 let report = UploadErrorReport(
                     message: "Failed to read captured image.",
@@ -277,7 +279,7 @@ extension AppViewModel: CameraServiceDelegate {
         }
     }
 
-    func cameraService(_ service: CameraService, didEncounter error: Error) {
+    public func cameraServiceDidEncounterError(_ error: Error) {
         cameraError = error.localizedDescription
         if !isTimerCapture {
             let report = UploadErrorReport(
@@ -290,7 +292,7 @@ extension AppViewModel: CameraServiceDelegate {
         isTimerCapture = false
     }
     
-    func cameraServiceDidUpdateAvailableCameras(_ service: CameraService) {
+    public func cameraServiceDidUpdateAvailableCameras() {
         updateCameraState()
     }
 }

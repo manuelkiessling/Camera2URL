@@ -4,16 +4,11 @@
 //
 
 import AVFoundation
+import Camera2URLShared
 import Foundation
 
-protocol CameraServiceDelegate: AnyObject {
-    func cameraService(_ service: CameraService, didCapturePhoto data: Data)
-    func cameraService(_ service: CameraService, didEncounter error: Error)
-    func cameraServiceDidUpdateAvailableCameras(_ service: CameraService)
-}
-
-/// Represents an available camera device
-struct CameraDevice: Identifiable, Equatable {
+/// Represents an available camera device on iOS
+struct CameraDevice: CameraDeviceInfo {
     let id: String
     let name: String
     let deviceType: AVCaptureDevice.DeviceType
@@ -58,7 +53,9 @@ struct CameraDevice: Identifiable, Equatable {
 }
 
 @MainActor
-final class CameraService: NSObject {
+final class CameraService: NSObject, CameraServiceProtocol {
+    typealias CameraDeviceType = CameraDevice
+    
     enum CameraError: LocalizedError {
         case permissionDenied
         case configurationFailed
@@ -131,7 +128,7 @@ final class CameraService: NSObject {
 
     func capturePhoto() {
         guard isConfigured else {
-            delegate?.cameraService(self, didEncounter: CameraError.configurationFailed)
+            delegate?.cameraServiceDidEncounterError(CameraError.configurationFailed)
             return
         }
 
@@ -282,7 +279,7 @@ final class CameraService: NSObject {
     
     private func handleDeviceChange() {
         refreshAvailableCameras()
-        delegate?.cameraServiceDidUpdateAvailableCameras(self)
+        delegate?.cameraServiceDidUpdateAvailableCameras()
         
         // If current camera was disconnected, switch to first available
         if let current = currentCamera,
@@ -296,16 +293,15 @@ final class CameraService: NSObject {
 extension CameraService: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let error = error {
-            delegate?.cameraService(self, didEncounter: error)
+            delegate?.cameraServiceDidEncounterError(error)
             return
         }
 
         guard let data = photo.fileDataRepresentation() else {
-            delegate?.cameraService(self, didEncounter: CameraError.captureFailed)
+            delegate?.cameraServiceDidEncounterError(CameraError.captureFailed)
             return
         }
 
-        delegate?.cameraService(self, didCapturePhoto: data)
+        delegate?.cameraServiceDidCapturePhoto(data)
     }
 }
-

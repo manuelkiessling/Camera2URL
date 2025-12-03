@@ -6,6 +6,10 @@ DerivedData/
 *.xcuserstate
 xcuserdata/
 
+# Swift Package Manager
+.build/
+.swiftpm/
+
 # Build artifacts
 macos/build/
 ios/build/

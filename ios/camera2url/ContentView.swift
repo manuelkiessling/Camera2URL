@@ -3,10 +3,11 @@
 //  camera2url
 //
 
+import Camera2URLShared
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var viewModel: AppViewModel
+    @ObservedObject var viewModel: IOSAppViewModel
     @State private var showingHistory = false
 
     var body: some View {
@@ -195,8 +196,8 @@ struct ContentView: View {
 // MARK: - Capture Result View
 
 private struct CaptureResultView: View {
-    let photo: AppViewModel.CapturedPhoto
-    let status: AppViewModel.UploadStatus
+    let photo: IOSAppViewModel.CapturedPhoto
+    let status: IOSAppViewModel.UploadStatus
     let onNext: () -> Void
     let onEdit: () -> Void
 
@@ -321,7 +322,7 @@ private struct CameraPicker: View {
 
 /// Thumbnail showing the latest photo captured by the timer
 private struct TimerPhotoThumbnail: View {
-    let photo: AppViewModel.CapturedPhoto
+    let photo: IOSAppViewModel.CapturedPhoto
     let captureCount: Int
     let captureTime: Date?
     
@@ -506,4 +507,3 @@ private struct TimerControlsView: View {
         }
     }
 }
-
