@@ -1,5 +1,7 @@
 # Camera2URL for iOS [![iOS CI](https://github.com/manuelkiessling/camera2url/actions/workflows/ios-ci.yml/badge.svg?branch=main)](https://github.com/manuelkiessling/camera2url/actions/workflows/ios-ci.yml)
 
+[![Download the iOS version on the App Store](https://raw.githubusercontent.com/manuelkiessling/gh-assets/refs/heads/main/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg)](https://apps.apple.com/app/camera2url/id6756015636)
+
 An iOS app that captures photos from your iPhone's camera and uploads them to a configurable HTTP endpoint. Perfect for automated photo capture workflows, time-lapse photography with remote storage, and webhook-based photo integrations.
 
 ## Features
