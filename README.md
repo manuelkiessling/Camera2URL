@@ -12,7 +12,7 @@ and upload them to configurable HTTP endpoints. The repository hosts code for tw
 
 The below video shows how Camera2URL can be used to trigger an n8n workflow by immediately posting images to the n8n Webhook node endpoint URL: 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Y5nCw8NY8zk?si=cIYCWRTPdi9KwBoN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![Camera2URL n8n demo video](https://raw.githubusercontent.com/manuelkiessling/gh-assets/refs/heads/main/Camera2URL-demo-video-screenshot.png)](https://www.youtube.com/watch?v=Y5nCw8NY8zk)
 
 ## Quick Start
 
