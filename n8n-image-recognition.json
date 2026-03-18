@@ -1,0 +1,175 @@
+{
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "0d7a929f-fc3a-4e9a-82bc-d33299dbd390",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2.1,
+            "position": [
+                -512,
+                -144
+            ],
+            "id": "7d036177-4110-40f7-86a4-e2f050292a89",
+            "name": "Webhook",
+            "webhookId": "0d7a929f-fc3a-4e9a-82bc-d33299dbd390"
+        },
+        {
+            "parameters": {
+                "resource": "image",
+                "operation": "analyze",
+                "modelId": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "GPT-4O-MINI"
+                },
+                "text": "Please identify the single dominating item in this image, and respond with exactly one single noun that is best suited to name the item. So for example, if the dominating item in the image is a fish, respond with \"fish\", if it is a pair of socks, respond with \"socks\".\n\nNo chatting, no explanation, no additional info, only a single noun.",
+                "inputType": "base64",
+                "binaryPropertyName": "file",
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.openAi",
+            "typeVersion": 1.8,
+            "position": [
+                -224,
+                -256
+            ],
+            "id": "ffeda24a-28aa-4512-912d-20b04c2532a6",
+            "name": "Analyze image",
+            "credentials": {
+                "openAiApi": {
+                    "id": "Gk7obTnCgTWMtjDy",
+                    "name": "OpenAi API Key \"n8n-labor-default\""
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "resize",
+                "dataPropertyName": "file",
+                "options": {
+                    "fileName": "data",
+                    "format": "jpeg"
+                }
+            },
+            "type": "n8n-nodes-base.editImage",
+            "typeVersion": 1,
+            "position": [
+                -224,
+                -48
+            ],
+            "id": "3d588f8e-7f8a-4298-a7c9-61a53890e9ee",
+            "name": "Edit Image"
+        },
+        {
+            "parameters": {
+                "mode": "combine",
+                "combineBy": "combineByPosition",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.merge",
+            "typeVersion": 3.2,
+            "position": [
+                80,
+                -144
+            ],
+            "id": "9137a91a-f64e-45fe-9eb0-f83b9eba9825",
+            "name": "Merge"
+        },
+        {
+            "parameters": {
+                "resource": "databasePage",
+                "databaseId": {
+                    "__rl": true,
+                    "value": "2bcfa042-cd4c-8061-9f69-e661cdf018cb",
+                    "mode": "list",
+                    "cachedResultName": "n8n | Image Recognition Results",
+                    "cachedResultUrl": "https://www.notion.so/2bcfa042cd4c80619f69e661cdf018cb"
+                },
+                "propertiesUi": {
+                    "propertyValues": [
+                        {
+                            "key": "Image content description|rich_text",
+                            "textContent": "={{ $json.content }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.notion",
+            "typeVersion": 2.2,
+            "position": [
+                320,
+                -144
+            ],
+            "id": "44c08eba-5c4b-47b1-b144-3439dd998be6",
+            "name": "Create a database page",
+            "credentials": {
+                "notionApi": {
+                    "id": "BnGRSZIw4F9rOFvU",
+                    "name": "Notion manuel.kiessling.joboo@gmail.com"
+                }
+            }
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Analyze image",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Edit Image",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Analyze image": {
+            "main": [
+                [
+                    {
+                        "node": "Merge",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Edit Image": {
+            "main": [
+                [
+                    {
+                        "node": "Merge",
+                        "type": "main",
+                        "index": 1
+                    }
+                ]
+            ]
+        },
+        "Merge": {
+            "main": [
+                [
+                    {
+                        "node": "Create a database page",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "pinData": {},
+    "meta": {
+        "templateCredsSetupCompleted": true,
+        "instanceId": "d93387c79ee2a5539aa8a58c3180970da89d287ccc2298e5b3bdcf4c3f809ea3"
+    }
+}
+
